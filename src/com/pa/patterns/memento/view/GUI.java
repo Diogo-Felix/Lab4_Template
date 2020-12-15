@@ -1,5 +1,6 @@
 package com.pa.patterns.memento.view;
 
+import com.pa.patterns.memento.model.NoMementoException;
 import com.pa.patterns.memento.model.Product;
 import com.pa.patterns.memento.model.ShoppingCartController;
 import javafx.application.Application;
@@ -53,7 +54,7 @@ public class GUI extends Application {
         buttonAddProduct.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                if (textFieldProductName.getText().isBlank() || textFieldPrice.getText().isBlank()) {
+                if (textFieldProductName.getText().isEmpty() || textFieldPrice.getText().isEmpty()) {
                     error("Missing product information.");
                 } else {
                     try {
@@ -82,7 +83,7 @@ public class GUI extends Application {
 
         comboBoxMemento = new ComboBox<>();
         comboBoxMemento.setPromptText("Select a time to restore");
-//        hBoxUndo.getChildren().add(comboBoxMemento);
+        hBoxUndo.getChildren().add(comboBoxMemento);
 
         Button buttonUndo = new Button("Undo");
         hBoxUndo.getChildren().add(buttonUndo);
@@ -96,6 +97,12 @@ public class GUI extends Application {
             @Override
             public void handle(ActionEvent actionEvent) {
                 // TODO
+                try {
+                    shoppingCartController.undo();
+                    updateProductCartList();
+                } catch (NoMementoException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
